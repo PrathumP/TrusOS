@@ -1,19 +1,16 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-//#include "../include/home.h"
- 
-/* Check if the compiler thinks you are targeting the wrong operating system. */
+//#include "include/home.h"
+
 #if defined(__linux__)
 #error "You are not using a cross-compiler"
 #endif
- 
-/* This tutorial will only work for the 32-bit ix86 targets. */
+
 #if !defined(__i386__)
 #error "This compiled with a ix86-elf compiler"
 #endif
- 
-/* Hardware text mode color constants. */
+
 enum vga_color {
 	VGA_COLOR_BLACK = 0,
 	VGA_COLOR_BLUE = 1,
@@ -51,8 +48,8 @@ size_t strlen(const char* str)
 	return len;
 }
  
-static const size_t VGA_WIDTH = 100;
-static const size_t VGA_HEIGHT = 40;
+static const size_t VGA_WIDTH = 80;
+static const size_t VGA_HEIGHT = 25;
  
 size_t terminal_row;
 size_t terminal_column;
@@ -72,6 +69,13 @@ void terminal_initialize(void)
 		}
 	}
 }
+
+// void terminal_scroll(void){
+// 	terminal_row = VGA_HEIGHT-1;
+// 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
+
+// 	}
+// }
  
 void terminal_setcolor(uint8_t color) 
 {
@@ -84,16 +88,20 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 	terminal_buffer[index] = vga_entry(c, color);
 }
  
-void terminal_putchar(char c) 
-{
-	terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
-	if (++terminal_column == VGA_WIDTH) {
+void terminal_putchar(char c) {
+    if (c == '\n') {
+        if (++terminal_row == VGA_HEIGHT) {terminal_row = 0;}
 		terminal_column = 0;
-		if (++terminal_row == VGA_HEIGHT)
-			terminal_row = 0;
-	}
+    } else {
+        terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+        if (++terminal_column == VGA_WIDTH) {
+            terminal_column = 0;
+            if (++terminal_row == VGA_HEIGHT)
+                terminal_row = 0;
+        }
+    }
 }
- 
+
 void terminal_write(const char* data, size_t size) 
 {
 	for (size_t i = 0; i < size; i++)
