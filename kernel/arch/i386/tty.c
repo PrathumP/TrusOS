@@ -7,8 +7,6 @@
 
 #include "vga.h"
 
-static const size_t VGA_WIDTH = 80;
-static const size_t VGA_HEIGHT = 25;
 static uint16_t* const VGA_MEMORY = (uint16_t*) 0xB8000;
 
 static size_t terminal_row;
@@ -69,6 +67,13 @@ void terminal_putchar(char c) {
 }}
 }
 
+int putchar(int ic)
+{
+    char c = (char)ic;
+    terminal_write(&c, sizeof(c));
+    return ic;
+}
+
 void terminal_write(const char* data, size_t size) {
 	for (size_t i = 0; i < size; i++)
 		terminal_putchar(data[i]);
@@ -76,4 +81,53 @@ void terminal_write(const char* data, size_t size) {
 
 void terminal_writestring(const char* data) {
 	terminal_write(data, strlen(data));
+}
+
+void term_putc(char c, enum vga_color char_color)
+{
+    //unsigned int i = 0; // place holder for text string position
+    //unsigned int j = 0; // place holder for video buffer position
+
+    int index;
+    // Remember - we don't want to display ALL characters!
+    switch (c)
+    {
+    case '\n': // Newline characters should return the column to 0, and increment the row
+    {
+        terminal_column = 0;
+        terminal_row += 2;
+        break;
+    }
+
+    default: // Normal characters just get displayed and then increment the column
+    {
+        index = (VGA_WIDTH * terminal_row) + terminal_column; // Like before, calculate the buffer index
+        VGA_MEMORY[index] = c;
+        VGA_MEMORY[index + 1] = char_color;
+        // terminal_column += 2;
+        break;
+    }
+    }
+
+    // What happens if we get past the last column? We need to reset the column to 0, and increment the row to get to a new line
+    if (terminal_column >= VGA_WIDTH)
+    {
+        terminal_column = 0;
+        terminal_row++;
+    }
+
+    // What happens if we get past the last row? We need to reset both column and row to 0 in order to loop back to the top of the screen
+    if (terminal_row >= VGA_WIDTH)
+    {
+        terminal_column = 0;
+        terminal_row = 0;
+    }
+}
+
+int get_terminal_row(void) {
+    return terminal_row;
+}
+
+int get_terminal_col(void) {
+    return terminal_column;
 }

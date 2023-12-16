@@ -16,8 +16,8 @@ void print_logo(void)
 
 void about()
 {
-    printf("\n\tTrusOS - A simple 32-bit x86 operating system" );
-    printf("\n\tGitHub repository: https://github.com/PrathumP/TrusOS dvdsvsdfvvvfzfvvvvvvvvvvvvvvvvvvvv");
+    printf("\tTrusOS - A simple 32-bit x86 operating system \n");
+    printf("\tGitHub repository: https://github.com/PrathumP/TrusOS \n");
     printf("\t                                                         \n");
 
 }
