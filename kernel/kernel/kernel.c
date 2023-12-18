@@ -8,15 +8,15 @@
 
 void kernel_main(void) {
 
-	// terminal_initialize();
-	// print_logo();
+	terminal_initialize();
+	print_logo();
 	// //printf("Hello, kernel World!\n");
 	// about();
 	char buffer[1024];
 	uint8_t byte;
 
-	terminal_initialize();
-	printf("Welcome! I'm a super advanced operational system with lots of features.\n\n");
+	//terminal_initialize();
+	printf("Hello ! Nice to meet you \n");
 
 	strcpy(&buffer[strlen(buffer)], "");
 	print_prompt();
@@ -24,7 +24,7 @@ void kernel_main(void) {
 	{
 		while (byte = scan())
 		{
-			if (byte == 0x1c)
+			if (byte == ENTER)
 			{
 				if (strlen(buffer) > 0 && strcmp(buffer, "exit") == 0)
 				{
@@ -34,13 +34,29 @@ void kernel_main(void) {
 				{
 					printf("\nHi!");
 				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "clear") == 0)
+				{
+					terminal_initialize();
+					strcpy(&buffer[strlen(buffer)], "");
+				}
 				print_prompt();
 				memset(&buffer[0], 0, sizeof(buffer));
 				break;
 			}
-			else
+			else if ((byte == BACKSPACE) && (strlen(buffer) == 0))
+			{
+			}
+			else if (byte == BACKSPACE)
 			{
 				char c = normalmap[byte];
+				char *s;
+				s = ctos(s, c);
+				printf("%s", s);
+				buffer[strlen(buffer) - 1] = '\0';
+			}
+			else 
+			{
+				char c = (normalmap[byte]);
 				char *s;
 				s = ctos(s, c);
 				printf("%s", s);
@@ -49,5 +65,4 @@ void kernel_main(void) {
 			move_cursor(get_terminal_row(), get_terminal_col());
 		}
 	}
-	//return 0;
 }

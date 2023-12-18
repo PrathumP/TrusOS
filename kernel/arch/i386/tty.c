@@ -99,7 +99,7 @@ void term_putc(char c, enum vga_color char_color)
         break;
     }
 
-    default: // Normal characters just get displayed and then increment the column
+    default: 
     {
         index = (VGA_WIDTH * terminal_row) + terminal_column; // Like before, calculate the buffer index
         VGA_MEMORY[index] = c;
@@ -108,19 +108,16 @@ void term_putc(char c, enum vga_color char_color)
         break;
     }
     }
-
-    // What happens if we get past the last column? We need to reset the column to 0, and increment the row to get to a new line
     if (terminal_column >= VGA_WIDTH)
     {
         terminal_column = 0;
         terminal_row++;
     }
 
-    // What happens if we get past the last row? We need to reset both column and row to 0 in order to loop back to the top of the screen
     if (terminal_row >= VGA_WIDTH)
     {
         terminal_column = 0;
-        terminal_row = 0;
+        terminal_scroll();
     }
 }
 

@@ -1,7 +1,9 @@
 #ifndef _KERNEL_TTY_H
 #define _KERNEL_TTY_H
 
-#include <stddef.h>
+#include "stdint.h"
+#include "stddef.h"
+#include "stdarg.h"
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
