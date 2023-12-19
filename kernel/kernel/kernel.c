@@ -40,7 +40,7 @@ void kernel_main(void) {
 					strcpy(&buffer[strlen(buffer)], "");
 				}
 				print_prompt();
-				memset(&buffer[0], 0, sizeof(buffer));
+				memset(buffer, 0, sizeof(buffer));
 				break;
 			}
 			else if ((byte == BACKSPACE) && (strlen(buffer) == 0))
@@ -48,11 +48,18 @@ void kernel_main(void) {
 			}
 			else if (byte == BACKSPACE)
 			{
-				char c = normalmap[byte];
-				char *s;
-				s = ctos(s, c);
-				printf("%s", s);
-				buffer[strlen(buffer) - 1] = '\0';
+				//char c = normalmap[byte];
+				//char *s;
+				//s = ctos(s, c);
+				//buffer[strlen(buffer) - 1] = '\0';
+				//terminal_write(buffer,strlen(buffer) - 1);
+				//terminal_column--;
+				//strcpy(&buffer[strlen(buffer)-1], "");
+				backspace();
+				//printf("%s", s);
+				//memset(buffer[strlen(buffer) - 1], "", 1);
+				move_cursor(get_terminal_row(), get_terminal_col());
+				// strcpy(&buffer[strlen(buffer)], "");
 			}
 			else 
 			{

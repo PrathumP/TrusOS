@@ -128,3 +128,10 @@ int get_terminal_row(void) {
 int get_terminal_col(void) {
     return terminal_column;
 }
+
+void backspace(){
+    size_t row = get_terminal_row();
+    size_t col = get_terminal_col();
+    terminal_buffer[row*VGA_WIDTH + col-1] = vga_entry(' ', terminal_color);
+    terminal_column--;
+}
