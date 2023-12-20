@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-
+#include <stdio.h>
 #include <kernel/tty.h>
 
 #include "vga.h"
@@ -14,10 +14,14 @@ static size_t terminal_column;
 static uint8_t terminal_color;
 static uint16_t* terminal_buffer;
 
-void terminal_initialize(void) {
+static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) {
+	return fg | bg << 4;
+}
+
+void terminal_initialize(enum vga_color font, enum vga_color background) {
 	terminal_row = 0;
 	terminal_column = 0;
-	terminal_color = vga_entry_color(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
+	terminal_color = vga_entry_color(font, background );
 	terminal_buffer = VGA_MEMORY;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
 		for (size_t x = 0; x < VGA_WIDTH; x++) {
@@ -27,8 +31,17 @@ void terminal_initialize(void) {
 	}
 }
 
-void terminal_setcolor(uint8_t color) {
-	terminal_color = color;
+void terminal_render(){
+    for (size_t y = 0; y < VGA_HEIGHT; y++) {
+		for (size_t x = 0; x < VGA_WIDTH; x++) {
+			const size_t index = y * VGA_WIDTH + x;
+			terminal_buffer[index] = vga_entry(terminal_buffer[index], terminal_color);
+		}
+	}
+}
+
+void terminal_setcolor(enum vga_color font, enum vga_color background) {
+	terminal_color = vga_entry_color(font, background );
 }
 
 void terminal_scroll(void) {
@@ -85,14 +98,11 @@ void terminal_writestring(const char* data) {
 
 void term_putc(char c, enum vga_color char_color)
 {
-    //unsigned int i = 0; // place holder for text string position
-    //unsigned int j = 0; // place holder for video buffer position
 
     int index;
-    // Remember - we don't want to display ALL characters!
     switch (c)
     {
-    case '\n': // Newline characters should return the column to 0, and increment the row
+    case '\n':
     {
         terminal_column = 0;
         terminal_row += 2;
@@ -101,10 +111,9 @@ void term_putc(char c, enum vga_color char_color)
 
     default: 
     {
-        index = (VGA_WIDTH * terminal_row) + terminal_column; // Like before, calculate the buffer index
+        index = (VGA_WIDTH * terminal_row) + terminal_column; 
         VGA_MEMORY[index] = c;
         VGA_MEMORY[index + 1] = char_color;
-        // terminal_column += 2;
         break;
     }
     }
@@ -134,4 +143,39 @@ void backspace(){
     size_t col = get_terminal_col();
     terminal_buffer[row*VGA_WIDTH + col-1] = vga_entry(' ', terminal_color);
     terminal_column--;
+}
+
+void color_options(){
+    printf("\nPlease select a font color. Valid options are:\n");
+    terminal_setcolor(VGA_COLOR_BLUE, VGA_COLOR_BLACK);
+    printf("\nCOLOR_BLUE : Type 'blue' to set color blue ");
+    terminal_setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
+    printf("\nCOLOR_GREEN : Type 'green' to set color green");
+    terminal_setcolor(VGA_COLOR_CYAN, VGA_COLOR_BLACK);
+    printf("\nCOLOR_CYAN : Type 'cyan' to set color cyan ");
+    terminal_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
+    printf("\nCOLOR_RED : Type 'red' to set color red ");
+    terminal_setcolor(VGA_COLOR_MAGENTA, VGA_COLOR_BLACK);
+    printf("\nCOLOR_MAGENTA : Type 'magenta' to set color magenta ");
+    terminal_setcolor(VGA_COLOR_BROWN, VGA_COLOR_BLACK);
+    printf("\nCOLOR_BROWN : Type 'brown' to set color brown ");
+    terminal_setcolor(VGA_COLOR_LIGHT_GREY,VGA_COLOR_BLACK);
+    printf("\nCOLOR_LIGHT_GREY : Type 'grey' to set color grey ");
+    terminal_setcolor(VGA_COLOR_DARK_GREY, VGA_COLOR_BLACK);
+    printf("\nCOLOR_DARK_GREY : Type 'darkgrey' to set color dark gray ");
+    terminal_setcolor(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
+    printf("\nCOLOR_LIGHT_BLUE : Type 'lightblue' to set color light blue ");
+    terminal_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
+    printf("\nCOLOR_LIGHT_GREEN : Type 'lightgreen' to set color light green ");
+    terminal_setcolor(VGA_COLOR_LIGHT_CYAN, VGA_COLOR_BLACK);
+    printf("\nCOLOR_LIGHT_CYAN : Type 'lightcyan' to set color light cyan ");
+    terminal_setcolor(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK);
+    printf("\nCOLOR_LIGHT_RED : Type 'lightred' to set color light red ");
+    terminal_setcolor(VGA_COLOR_LIGHT_MAGENTA, VGA_COLOR_BLACK);
+    printf("\nCOLOR_LIGHT_MAGENTA : Type 'lightmagenta' to set color light magenta ");
+    terminal_setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLACK);
+    printf("\nCOLOR_YELLOW : Type 'yellow' to set color yellow ");
+    terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+    printf("\nCOLOR_WHITE : Type 'white' to set color white \n");
+    terminal_setcolor(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
 }

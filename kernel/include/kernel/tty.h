@@ -27,7 +27,9 @@ enum vga_color {
 	VGA_COLOR_WHITE = 15,
 };
 
-void terminal_initialize(void);
+static enum vga_color default_font_color = VGA_COLOR_LIGHT_GREEN;
+
+void terminal_initialize(enum vga_color font, enum vga_color background);
 void terminal_putchar(char c);
 void terminal_write(const char* data, size_t size);
 void terminal_writestring(const char* data);
@@ -37,5 +39,9 @@ int get_terminal_row(void);
 int get_terminal_col(void);
 int get_terminal_col(void);
 void term_putc(char c, enum vga_color char_color);
+void terminal_setcolor(enum vga_color font, enum vga_color background);
+void terminal_render();
+void backspace();
+void color_options();
 
 #endif

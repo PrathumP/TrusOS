@@ -8,14 +8,13 @@
 
 void kernel_main(void) {
 
-	terminal_initialize();
+	terminal_initialize(default_font_color, VGA_COLOR_BLACK);
 	print_logo();
 	// //printf("Hello, kernel World!\n");
 	// about();
 	char buffer[1024];
 	uint8_t byte;
 
-	//terminal_initialize();
 	printf("Hello ! Nice to meet you \n");
 
 	strcpy(&buffer[strlen(buffer)], "");
@@ -36,14 +35,120 @@ void kernel_main(void) {
 				}
 				else if (strlen(buffer) > 0 && strcmp(buffer, "clear") == 0)
 				{
-					terminal_initialize();
+					terminal_initialize(default_font_color, VGA_COLOR_BLACK);
 					strcpy(&buffer[strlen(buffer)], "");
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "coloroptions") == 0)
+				{
+					color_options();
+					terminal_setcolor(default_font_color, VGA_COLOR_BLACK);
+					print_prompt();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "lightcyan") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_LIGHT_CYAN, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_LIGHT_CYAN;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "green") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_GREEN, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_GREEN;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "blue") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_BLUE, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_BLUE;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "red") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_RED;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "magenta") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_MAGENTA, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_MAGENTA;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "brown") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_BROWN, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_BROWN;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "yellow") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_LIGHT_BROWN, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_LIGHT_BROWN;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "grey") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_LIGHT_GREY;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "darkgrey") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_DARK_GREY, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_DARK_GREY;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "white") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_WHITE, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_WHITE;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "lightred") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_LIGHT_RED, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_LIGHT_RED;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "lightblue") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_LIGHT_BLUE;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "cyan") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_CYAN, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_CYAN;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "lightgreen") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_LIGHT_GREEN, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_LIGHT_GREEN;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "lightmagenta") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_LIGHT_MAGENTA, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_LIGHT_MAGENTA;
+					terminal_render();
+				}
+				else if (strlen(buffer) > 0 && strcmp(buffer, "cyan") == 0)
+				{
+					terminal_setcolor(VGA_COLOR_LIGHT_BLUE, VGA_COLOR_BLACK);
+					default_font_color = VGA_COLOR_LIGHT_BLUE;
+					terminal_render();
+				}
+				else
+				{
+					printf("\n'%s' : Command not found ", buffer);
 				}
 				print_prompt();
 				memset(buffer, 0, sizeof(buffer));
 				break;
 			}
-			else if ((byte == BACKSPACE) && (strlen(buffer) == 0))
+			else if ((byte == BACKSPACE) && (get_terminal_col()==4))
 			{
 			}
 			else if (byte == BACKSPACE)
