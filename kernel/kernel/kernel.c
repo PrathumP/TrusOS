@@ -9,6 +9,7 @@
 
 uint8_t numlock = true;
 uint8_t capslock = false;
+uint8_t shift = false;
 
 void kernel_main(void) {
 
@@ -174,6 +175,7 @@ void kernel_main(void) {
 			{
 				//char c = (normalmap[byte]);
 				char c1 = togglecode[byte];
+				char c2 = shiftcode[byte];
 				char c;
 				if (c1 == CAPSLOCK)
 				{
@@ -186,18 +188,28 @@ void kernel_main(void) {
 						capslock = false;
 					}
 				}
-				if (!capslock)
+				if(c2 == SHIFT) shift = true;
+				if (capslock)
 				{
-					c = normalmap[byte];
+					c = capslockmap[byte];
+				}
+				else if (shift)
+				{
+					c = shiftmap[byte];
+					shift = false;
 				}
 				else
 				{
-					c = capslockmap[byte];
+					c = normalmap[byte];
 				}
 				char *s;
 				s = ctos(s, c);
 				printf("%s", s);
 				strcpy(&buffer[strlen(buffer)], s);
+				if (byte == 0x2A || byte == 0x36)
+				{
+					shift = true;
+				}
 			}
 			move_cursor(get_terminal_row(), get_terminal_col());
 		}
