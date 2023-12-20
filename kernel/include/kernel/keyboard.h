@@ -1,9 +1,9 @@
-#ifndef KBD_H
-#define KBD_H
+#ifndef keyboard_H
+#define keyboard_H
 
-#define KBSTATP 0x64 // kbd controller status port(I)
-#define KBS_DIB 0x01 // kbd data in buffer
-#define KBDATAP 0x60 // kbd data port(I)
+#define KBSTATP 0x64 // keyboard controller status port(I)
+#define KBS_DIB 0x01 // keyboard data in buffer
+#define keyboardATAP 0x60 // keyboard data port(I)
 #define BACKSPACE 0x0E
 #define ENTER 0x1c
 
@@ -67,6 +67,32 @@ static char normalmap[256] =
         [0x97] KEY_HOME, [0xCF] KEY_END,
         [0xD2] KEY_INS, [0xD3] KEY_DEL};
 
+static char capslockmap[256] =
+    {
+        NO, 0x1B, '1', '2', '3', '4', '5', '6', // 0x00
+        '7', '8', '9', '0', '-', '=', '\b', '\t',
+        'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', // 0x10
+        'O', 'P', '{', '}', '\n', NO, 'A', 'S',
+        'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', // 0x20
+        '\'', '`', NO, '\\', 'Z', 'X', 'C', 'V',
+        'B', 'N', 'M', ',', '.', '/', NO, '*', // 0x30
+        NO, ' ', NO, NO, NO, NO, NO, NO,
+        NO, NO, NO, NO, NO, NO, NO, '7', // 0x40
+        '8', '9', '-', '4', '5', '6', '+', '1',
+        '2', '3', '0', '.', NO, NO, NO, NO, // 0x50
+        [0x9C] '\n',                        // KP_Enter
+        [0xB5] '/',                         // KP_Div
+        [0xC8] KEY_UP,
+        [0xD0] KEY_DN,
+        [0xC9] KEY_PGUP,
+        [0xD1] KEY_PGDN,
+        [0xCB] KEY_LF,
+        [0xCD] KEY_RT,
+        [0x97] KEY_HOME,
+        [0xCF] KEY_END,
+        [0xD2] KEY_INS,
+        [0xD3] KEY_DEL};
+
 static char shiftmap[256] =
     {
         NO, 033, '!', '@', '#', '$', '%', '^', // 0x00
@@ -110,4 +136,4 @@ static char ctlmap[256] =
         [0x97] KEY_HOME, [0xCF] KEY_END,
         [0xD2] KEY_INS, [0xD3] KEY_DEL};
 
-#endif // KBD_H
+#endif // keyboard_H

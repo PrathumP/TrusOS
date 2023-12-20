@@ -3,8 +3,12 @@
 #include <kernel/tty.h>
 #include <kernel/home.h>
 #include "kernel/ports.h"
-#include "kernel/kbd.h"
+#include "kernel/bool.h"
+#include "kernel/keyboard.h"
 #include "../../libc/include/string.h"
+
+uint8_t numlock = true;
+uint8_t capslock = false;
 
 void kernel_main(void) {
 
@@ -168,7 +172,28 @@ void kernel_main(void) {
 			}
 			else 
 			{
-				char c = (normalmap[byte]);
+				//char c = (normalmap[byte]);
+				char c1 = togglecode[byte];
+				char c;
+				if (c1 == CAPSLOCK)
+				{
+					if (!capslock)
+					{
+						capslock = true;
+					}
+					else
+					{
+						capslock = false;
+					}
+				}
+				if (!capslock)
+				{
+					c = normalmap[byte];
+				}
+				else
+				{
+					c = capslockmap[byte];
+				}
 				char *s;
 				s = ctos(s, c);
 				printf("%s", s);
